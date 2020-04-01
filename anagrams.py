@@ -12,7 +12,7 @@ import sys
 
 # Your name here, and any other people/sources who helped.
 # Give credit where credit is due.
-__author__ = "???"
+__author__ = "Cedric Mulvihill"
 
 
 def alphabetize(string):
@@ -27,11 +27,13 @@ def find_anagrams(words):
     Example:
     {'dgo': ['dog'], 'act': ['cat', 'act']}
     """
-    anagrams = {
-        alphabetize(word): [
-            w for w in words
-            if alphabetize(w) == alphabetize(word)]
-        for word in words}
+    anagrams = {}
+    for word in words:
+        item = alphabetize(word)
+        if item in anagrams:
+            anagrams[item].append(word)
+        else:
+            anagrams[item] = [word]
     return anagrams
 
 
@@ -41,9 +43,13 @@ def main(args):
         print("Please specify a word file!")
         sys.exit(1)
 
-    with open(args[0]) as f:
+    with open(args[0], 'r') as f:
         words = f.read().split()
-    anagram_dict = find_anagrams(words)
+    anagram_dict = {
+        "".join(sorted(word.lower())): [
+            w for w in words
+            if "".join(sorted(w.lower())) == "".join(sorted(word.lower()))]
+        for word in words}
     for k, v in anagram_dict.items():
         print("{} : {}".format(k, v))
 
